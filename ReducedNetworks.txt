@@ -1,0 +1,67 @@
+## Reduced networks
+## Yin LAb 4/4/2023
+# To use, copy into the definition of the system function. Leave the if/else return loop as is unless specifically included.
+# Be sure to alter the length of the initial parameter guess to match the length of the paramter
+# or the length of the initial conditions to match the number of species as necessary. 
+
+# No hydrolysis netowrk -- used for Fig. 4c    
+	k1, k3, k5, k7, k9, k11, k13, k15, k17, k19, k21 = r
+    G, A, GG, AA, AG, AGG, GGG, GGGG, AAG, AAA = y
+    
+    dGdt = (-2*k1*G**2 - k5*A*G - k7*AG*G - k9*G*GG - k11*G*GGG - k17*G*AA)
+    dAdt = (-2*k3*A**2 - k5*A*G - k15*A*GG - k19*A*AG - k21*A*AA)
+    dGGdt = (k1*G**2 - k9*G*GG - 2*k13*GG**2 - k15*A*GG)
+    dAAdt = (k3*A**2 - k17*G*AA - k21*A*AA)
+    dAGdt = (k5*A*G - k7*AG*G - k19*A*AG)
+    dAGGdt = (k7*G*AG + k15*A*GG)
+    dGGGdt = (k9*G*GG - k11*G*GGG)
+    dGGGGdt = (k11*G*GGG + k13*GG**2)
+    dAAGdt = (k17*G*AA + k19*A*AG)
+    dAAAdt = (k21*A*AA)  
+
+# Homopolymer network -- used for Fig. 4d  
+  k1, k2, k9, k10, k11, k12, k13, k14 = r
+    G, GG, GGG, GGGG = y
+    
+    dGdt = (-2*k1*G**2 + 2*k2*GG + k9*G*GG + k10*GGG - k11*G*GGG + k12*GGGG)
+    dGGdt = (k1*G**2 - k2*GG - k9*G*GG + k10*GGG - 2*k13*GG**2 + 2*k14*GGGG)
+    dGGGdt = (k9*G*GG - k10*GGG - k11*G*GGG + k12*GGGG)
+    dGGGGdt = (k11*G*GGG - k12*GGGG + k13*GG**2 - k14*GGGG)
+
+    if str(type(dGdt)) == "<class 'torch.Tensor'>":
+        res = torch.cat([dGdt.flatten(),  dGGdt.flatten(),
+                         dGGGdt.flatten(), dGGGGdt.flatten()])
+    else:
+        res = np.array([dGdt, dGGdt, dGGGdt, dGGGGdt])
+    return res
+
+
+# SPCA example -- Used for Supplemental Information, Section S3, Fig. S3.1
+    k3, k5, k8, k9, k10, k11, k13, k17, k19, k20, k21, k22 = r
+    G, A, GG, AA, AG, AGG, GGG, GGGG, AAG, AAA = y
+    
+    dGdt = (-k5*A*G + k8*AGG - k9*G*GG + k10*GGG - k11*G*GGG - k17*G*AA)
+    dAdt = (-2*k3*A**2 - k5*A*G - k19*A*AG + k20*AAG - k21*A*AA + k22*AAA)
+    dGGdt = ( - k9*G*GG + k10*GGG - 2*k13*GG**2)
+    dAAdt = (k3*A**2 - k17*G*AA - k21*A*AA + k22*AAA)
+    dAGdt = (k5*A*G + k8*AGG - k19*A*AG + k20*AAG)
+    dAGGdt = (- k8*AGG)
+    dGGGdt = (k9*G*GG - k10*GGG - k11*G*GGG)
+    dGGGGdt = (k11*G*GGG + k13*GG**2)
+    dAAGdt = (k17*G*AA + k19*A*AG - k20*AAG)
+    dAAAdt = (k21*A*AA - k22*AAA)	
+	
+# SPCA example -- Used for Supplemental Information, Section S3, Fig. S3.2
+    # k1, k2, k4, k5, k8, k11, k14, k15, k16, k17, k18, k19, k20 = r
+    # G, A, GG, AA, AG, AGG, GGG, GGGG, AAG, AAA = y
+    
+    # dGdt = (-2*k1*G**2 + 2*k2*GG - k5*A*G + k8*AGG - k11*G*GGG - k17*G*AA + k18*AAG)
+    # dAdt = (2*k4*AA - k5*A*G - k15*A*GG + k16*AGG - k19*A*AG + k20*AAG)
+    # dGGdt = (k1*G**2 - k2*GG + 2*k14*GGGG - k15*A*GG + k16*AGG)
+    # dAAdt = (- k4*AA - k17*G*AA + k18*AAG)
+    # dAGdt = (k5*A*G + k8*AGG - k19*A*AG + k20*AAG)
+    # dAGGdt = (- k8*AGG + k15*A*GG - k16*AGG)
+    # dGGGdt = (- k11*G*GGG)
+    # dGGGGdt = (k11*G*GGG - k14*GGGG)
+    # dAAGdt = (k17*G*AA - k18*AAG + k19*A*AG - k20*AAG)
+    # dAAAdt = (k1*G*0)
