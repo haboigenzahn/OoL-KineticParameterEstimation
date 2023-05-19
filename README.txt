@@ -2,6 +2,8 @@ READ ME
 Kinetic modeling and parameter estimation of a prebiotic peptide reaction network
 by Hayley Boigenzahn, Leonardo Gonzalez, Jaron Thompson, Victor Zavala, and John Yin
 
+Parameter estimation of an ODE network based on experimental data. 
+
 May 2023
 
 Corresponding author: john.yin@wisc.edu
